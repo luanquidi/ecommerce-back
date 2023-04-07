@@ -54,8 +54,10 @@ io.on('connection', function (socket) {
 });
 
 // Se establece conexión a base de datos mongo.
+// DATABASE_URL="mongodb://mongo:<PASSWORD>@containers-us-west-1.railway.app:6852/test?authSource=admin"
+
 // mongoose.connect('mongodb://127.0.0.1:27017/tienda', { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
-    mongoose.connect('mongodb://mongo:tlHGxj8JzGacczRhipgk@containers-us-west-20.railway.app:8037', { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
+mongoose.connect('mongodb://mongo:tlHGxj8JzGacczRhipgk@containers-us-west-20.railway.app:8037/tienda?authSource=admin', { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
     if (err) console.log(err);
     else {
         server.listen(port, () => {
