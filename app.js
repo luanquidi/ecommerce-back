@@ -13,6 +13,7 @@ mercadopago.configure({
 });
 // Se establece puerto del servidor.
 const port = process.env.PORT || 4201;
+const url_bd = process.env.BD_URL || 'mongodb://127.0.0.1:27017/tienda';
 
 
 
@@ -55,10 +56,9 @@ io.on('connection', function (socket) {
 
 });
 
-console.log(process.env.BD_URL)
 
 // Se establece conexión a base de datos mongo.
-mongoose.connect(process.env.BD_URL, { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
+mongoose.connect(url_bd, { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
     if (err) console.log(err);
     else {
         server.listen(port, () => {

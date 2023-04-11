@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 
+
 // ========================================================== MÉTODOS CONTROLADOR ====================================================
 
 // Método para registrar un producto.
@@ -21,7 +22,8 @@ const registroProducto = async (req, res) => {
             const data = req.body;
             const files = req.files;
             let imgPath = files.portada.path;
-            const nombreImg = imgPath.split(`${process.env.PATH_IMAGES}`)[2];
+            let splitPatch = process.env.PATH_IMAGES || '\\';
+            const nombreImg = imgPath.split(splitPatch)[2];
 
             data.portada = nombreImg;
             data.slug = data.titulo.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
@@ -331,7 +333,9 @@ const agregarImagenGaleria = async (req, res) => {
 
             const files = req.files;
             let imgPath = files.imagen.path;
-            const nombreImg = imgPath.split(`${process.env.PATH_IMAGES}`)[2];
+            let splitPatch = process.env.PATH_IMAGES || '\\';
+            const nombreImg = imgPath.split(splitPatch)[2];
+
 
 
             const productoActualizado = await producto.findByIdAndUpdate({ _id: id }, {
@@ -450,7 +454,7 @@ const listarProductosRecomendados = async (req, res) => {
 }
 
 // Método para listar los productos
-const listarProductosNuevos= async (req, res) => {
+const listarProductosNuevos = async (req, res) => {
 
     // Se valida existencia del usuario.
     const listadoProductos = await producto.find().sort({ createdAt: -1 }).limit(8);
@@ -463,7 +467,7 @@ const listarProductosNuevos= async (req, res) => {
 
 }
 
-const listarProductosMasVendidos= async (req, res) => {
+const listarProductosMasVendidos = async (req, res) => {
 
     // Se valida existencia del usuario.
     const listadoProductos = await producto.find().sort({ nVentas: -1 }).limit(8);
@@ -480,7 +484,7 @@ const obtenerReviewsPublicoProducto = async (req, res) => {
 
     const id = req.params.id;
     // Se valida existencia del usuario.
-    const listadoReviews = await review.find({producto: id}).populate('cliente').sort({createdAt: -1});
+    const listadoReviews = await review.find({ producto: id }).populate('cliente').sort({ createdAt: -1 });
 
     res.status(200).send({
         datos: listadoReviews,
