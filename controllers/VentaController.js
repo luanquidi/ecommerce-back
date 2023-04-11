@@ -112,12 +112,9 @@ const generarVenta = async (req, res) => {
         items: itemsProductos,
         binary_mode: true,
         back_urls: {
-            // "success": `http://localhost:${port}/api/feedback`,
-            // "failure": `http://localhost:${port}/api/feedback`,
-            // "pending": `http://localhost:${port}/api/feedback`
-            "success": `https://ecommerce-back.up.railway.app/api/feedback`,
-            "failure": `https://ecommerce-back.up.railway.app/api/feedback`,
-            "pending": `https://ecommerce-back.up.railway.app/api/feedback`
+            "success": `${process.env.URL_FEEDBACK}/api/feedback`,
+            "failure": `${process.env.URL_FEEDBACK}/api/feedback`,
+            "pending": `${process.env.URL_FEEDBACK}/api/feedback`
         },
         auto_return: 'approved',
         payment_methods: {
@@ -174,7 +171,7 @@ const feedbackUrl = async (req, res) => {
 
             const existeVenta = await venta.find({ idOrdenMercadoPago: req.query.payment_id });
             if (existeVenta.length > 0) {
-                res.redirect(`https://ecommerce-tienda-v1.netlify.app/#/tienda/detalle-compra/${req.query.payment_id}`)
+                res.redirect(`${this.process.env.URL_TIENDA}/#/tienda/detalle-compra/${req.query.payment_id}`)
             } else {
 
                 const ultimaVenta = await venta.find().sort({ createdAt: -1 });
@@ -217,12 +214,12 @@ const feedbackUrl = async (req, res) => {
 
                 await enviarCorreoCompra(ventaCreada._id);
 
-                res.redirect(`https://ecommerce-tienda-v1.netlify.app/#/tienda/detalle-compra/${req.query.payment_id}`)
+                res.redirect(`${this.process.env.URL_TIENDA}/#/tienda/detalle-compra/${req.query.payment_id}`)
             }
         }
 
     } else {
-        res.redirect(`https://ecommerce-tienda-v1.netlify.app/#/tienda/carrito`)
+        res.redirect(`${this.process.env.URL_TIENDA}/#/tienda/carrito`)
     }
 
 

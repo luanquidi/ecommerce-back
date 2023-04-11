@@ -1,14 +1,16 @@
 'use strict'
 
 // Variables de inicio.
+require('dotenv').config({
+    path: `.env.${process.env.NODE_ENV || 'development'}`
+});
 const express = require('express');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const mercadopago = require("mercadopago");
 mercadopago.configure({
-    access_token: 'TEST-5254381570087218-032715-288872b3526381c24dca88a3eba275fd-181545197',
+    access_token: process.env.ACCESS_TOKEN,
 });
-
 // Se establece puerto del servidor.
 const port = process.env.PORT || 4201;
 
@@ -53,11 +55,10 @@ io.on('connection', function (socket) {
 
 });
 
-// Se establece conexión a base de datos mongo.
-// DATABASE_URL="mongodb://mongo:<PASSWORD>@containers-us-west-1.railway.app:6852/test?authSource=admin"
+console.log(process.env.BD_URL)
 
-// mongoose.connect('mongodb://127.0.0.1:27017/tienda', { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
-mongoose.connect('mongodb://mongo:tlHGxj8JzGacczRhipgk@containers-us-west-20.railway.app:8037/tienda?authSource=admin', { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
+// Se establece conexión a base de datos mongo.
+mongoose.connect(process.env.BD_URL, { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
     if (err) console.log(err);
     else {
         server.listen(port, () => {
@@ -80,9 +81,6 @@ app.use((req, res, next) => {
     res.header('Allow', 'GET, PUT, POST, DELETE, OPTIONS');
     next();
 });
-
-
-console.log(process.env.NODE_ENV || 'test');
 
 
 // Configuración de rutas.

@@ -12,7 +12,7 @@ const registrarDescuento = async (req, res) => {
             const data = req.body;
             const files = req.files;
             let imgPath = files.banner.path;
-            const nombreImg = imgPath.split('\\')[2];
+            const nombreImg = imgPath.split(`${process.env.PATH_IMAGES}`)[2];
 
             data.banner = nombreImg;
 
@@ -101,7 +101,7 @@ const actualizarDescuento = async (req, res) => {
             if (req.files) {
                 const files = req.files;
                 let imgPath = files.banner.path;
-                const nombreImg = imgPath.split('\\')[2];
+                const nombreImg = imgPath.split(`${process.env.PATH_IMAGES}`)[2];
 
                 const reg = await descuento.findByIdAndUpdate({ _id: id }, {
                     titulo: data.titulo,

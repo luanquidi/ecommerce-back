@@ -73,7 +73,7 @@ const actualizarConfig = async (req, res) => {
             if (req.files) {
                 const files = req.files;
                 let imgPath = files.logo.path;
-                const nombreImg = imgPath.split('\\')[2];
+                const nombreImg = imgPath.split(`${process.env.PATH_IMAGES}`)[2];
 
 
                 const configEncontrada = await config.find();

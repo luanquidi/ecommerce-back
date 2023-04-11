@@ -21,7 +21,7 @@ const registroProducto = async (req, res) => {
             const data = req.body;
             const files = req.files;
             let imgPath = files.portada.path;
-            const nombreImg = imgPath.split('\\')[2];
+            const nombreImg = imgPath.split(`${process.env.PATH_IMAGES}`)[2];
 
             data.portada = nombreImg;
             data.slug = data.titulo.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
@@ -127,7 +127,7 @@ const actualizarProducto = async (req, res) => {
             if (req.files) {
                 const files = req.files;
                 let imgPath = files.portada.path;
-                const nombreImg = imgPath.split('\\')[2];
+                const nombreImg = imgPath.split(`${rocess.env.PATH_IMAGES}`)[2];
 
                 const reg = await producto.findByIdAndUpdate({ _id: id }, {
                     titulo: data.titulo,
@@ -331,7 +331,7 @@ const agregarImagenGaleria = async (req, res) => {
 
             const files = req.files;
             let imgPath = files.imagen.path;
-            const nombreImg = imgPath.split('\\')[2];
+            const nombreImg = imgPath.split(`${process.env.PATH_IMAGES}`)[2];
 
 
             const productoActualizado = await producto.findByIdAndUpdate({ _id: id }, {
