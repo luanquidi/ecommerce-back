@@ -82,7 +82,7 @@ app.use((req, res, next) => {
 });
 
 
-
+console.log(process.env.NODE_ENV || 'test');
 
 
 // Configuración de rutas.
