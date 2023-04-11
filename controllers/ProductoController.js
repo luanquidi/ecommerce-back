@@ -129,7 +129,8 @@ const actualizarProducto = async (req, res) => {
             if (req.files) {
                 const files = req.files;
                 let imgPath = files.portada.path;
-                const nombreImg = imgPath.split(`${rocess.env.PATH_IMAGES}`)[2];
+                let splitPatch = process.env.PATH_IMAGES || '\\';
+                const nombreImg = imgPath.split(splitPatch)[2];
 
                 const reg = await producto.findByIdAndUpdate({ _id: id }, {
                     titulo: data.titulo,
