@@ -32,7 +32,7 @@ const listarConfig = async (req, res) => {
 
             // Se valida existencia del usuario.
             const configEncontrada = await config.find();
-            const listadoConfiges = await config.findById({ _id: configEncontrada[0]._id }).sort({ createdAt: -1 });
+            const listadoConfiges = await config.findById({ _id: configEncontrada[0]._id });
 
             res.status(200).send({
                 datos: listadoConfiges,
@@ -49,7 +49,7 @@ const obtenerConfig = async (req, res) => {
     // Se obtiene id.
     try {
         const configEncontrada = await config.find();
-        const listadoConfiges = await config.findById({ _id: configEncontrada[0]._id }).sort({ createdAt: -1 });
+        const listadoConfiges = await config.findById({ _id: configEncontrada[0]._id });
 
         res.status(200).send({
             datos: listadoConfiges,

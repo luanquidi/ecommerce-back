@@ -171,7 +171,7 @@ const feedbackUrl = async (req, res) => {
 
             const existeVenta = await venta.find({ idOrdenMercadoPago: req.query.payment_id });
             if (existeVenta.length > 0) {
-                res.redirect(`${this.process.env.URL_TIENDA}/#/tienda/detalle-compra/${req.query.payment_id}`)
+                res.redirect(`${process.env.URL_TIENDA}/#/tienda/detalle-compra/${req.query.payment_id}`)
             } else {
 
                 const ultimaVenta = await venta.find().sort({ createdAt: -1 });
@@ -214,12 +214,12 @@ const feedbackUrl = async (req, res) => {
 
                 await enviarCorreoCompra(ventaCreada._id);
 
-                res.redirect(`${this.process.env.URL_TIENDA}/#/tienda/detalle-compra/${req.query.payment_id}`)
+                res.redirect(`${process.env.URL_TIENDA}/#/tienda/detalle-compra/${req.query.payment_id}`)
             }
         }
 
     } else {
-        res.redirect(`${this.process.env.URL_TIENDA}/#/tienda/carrito`)
+        res.redirect(`${process.env.URL_TIENDA}/#/tienda/carrito`)
     }
 
 
@@ -260,8 +260,8 @@ const obtenerFeedbackCompra = async (req, res) => {
 const enviarCorreoCompraCliente = async (req, res) => {
 
     const id = req.params.id;
-    const ventaDetalle = await venta.findById({_id: id}).populate('cliente');
-    const detalles = await detalleVenta.find({venta: id}).populate('producto');
+    const ventaDetalle = await venta.findById({ _id: id }).populate('cliente');
+    const detalles = await detalleVenta.find({ venta: id }).populate('producto');
 
 
     // Estructura correo.
@@ -296,7 +296,7 @@ const enviarCorreoCompraCliente = async (req, res) => {
 
 
     readHTMLFile(process.cwd() + '/mail.html', (err, html) => {
-        let rest_html = ejs.render(html, { data: data, cliente: cliente, _id:_id, fecha: fecha, subtotal: subtotal, precio_envio: precio_envio  });
+        let rest_html = ejs.render(html, { data: data, cliente: cliente, _id: _id, fecha: fecha, subtotal: subtotal, precio_envio: precio_envio });
 
         var template = handlebars.compile(rest_html);
         var htmlToSend = template({ op: true });
@@ -320,8 +320,8 @@ const enviarCorreoCompraCliente = async (req, res) => {
 const enviarCorreoCompra = async (idVenta) => {
 
     const id = idVenta;
-    const ventaDetalle = await venta.findById({_id: id}).populate('cliente');
-    const detalles = await detalleVenta.find({venta: id}).populate('producto');
+    const ventaDetalle = await venta.findById({ _id: id }).populate('cliente');
+    const detalles = await detalleVenta.find({ venta: id }).populate('producto');
 
 
     // Estructura correo.
@@ -356,7 +356,7 @@ const enviarCorreoCompra = async (idVenta) => {
 
 
     readHTMLFile(process.cwd() + '/mail.html', (err, html) => {
-        let rest_html = ejs.render(html, { data: data, cliente: cliente, _id:_id, fecha: fecha, subtotal: subtotal, precio_envio: precio_envio  });
+        let rest_html = ejs.render(html, { data: data, cliente: cliente, _id: _id, fecha: fecha, subtotal: subtotal, precio_envio: precio_envio });
 
         var template = handlebars.compile(rest_html);
         var htmlToSend = template({ op: true });

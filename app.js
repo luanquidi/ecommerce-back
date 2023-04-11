@@ -9,7 +9,7 @@ const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const mercadopago = require("mercadopago");
 mercadopago.configure({
-    access_token: process.env.ACCESS_TOKEN,
+    access_token: process.env.ACCESS_TOKEN || 'TEST-5254381570087218-032715-288872b3526381c24dca88a3eba275fd-181545197',
 });
 // Se establece puerto del servidor.
 const port = process.env.PORT || 4201;
