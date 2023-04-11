@@ -95,7 +95,7 @@ const obtenerPortada = async (req, res) => {
             let pathImg = `./uploads/default.jpg`
             res.status(200).sendFile(path.resolve(pathImg));
         }
-    });
+    }); 
 }
 
 // Método para obtener un producto.
