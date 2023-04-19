@@ -71,6 +71,56 @@ const registrarCompra = async (req, res) => {
     } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
 }
 
+const registrarCompraAdmin = async (req, res) => {
+
+    if (req.user) {
+        // Se procesa la data.
+        const data = req.body;
+        const detalles = data.detalles;
+
+        const ultimaVenta = await venta.find().sort({ createdAt: -1 });
+        let serie = '';
+        let correlativo = '';
+        var numeroVenta = '';
+        if (ultimaVenta.length === 0) {
+            serie = '001';
+            correlativo = '000001';
+            numeroVenta = `${serie}-${correlativo}`
+        } else {
+            const ultVenta = ultimaVenta[0].nVenta.split('-');
+            if (ultVenta[1] != '999999') {
+                const nuevoCorrelativo = zfill(parseInt(ultVenta[1]) + 1, 6);
+                numeroVenta = `${ultVenta[0]}-${nuevoCorrelativo}`
+            } else if (ultVenta[1] == '999999') {
+                const nuevaSerie = zfill(parseInt(ultVenta[0]) + 1, 3);
+                numeroVenta = `${nuevaSerie}-000001`
+            }
+        }
+
+        data.nVenta = numeroVenta;
+        data.estado = 'Finalizada';
+
+        const ventaCreada = await venta.create(data);
+
+        detalles.map(async (detalle) => {
+            detalle.venta = ventaCreada._id;
+            await detalleVenta.create(detalle);
+            let elementoProducto = await producto.findById({ _id: detalle.producto });
+            let nuevoStock = elementoProducto.stock - detalle.cantidad;
+            await producto.findByIdAndUpdate({ _id: detalle.producto }, { stock: nuevoStock });
+        });
+
+        await enviarCorreoCompra(ventaCreada._id);
+
+        res.status(200).send({
+            datos: ventaCreada,
+            resultadoExitoso: true,
+            mensaje: 'La compra se ha solicitado de manera exitosa, recuerda finalizar tu pago en la tienda.'
+        });
+
+    } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+}
+
 function zfill(number, width) {
     var numberOutput = Math.abs(number);
     var length = number.toString().length;
@@ -386,5 +436,6 @@ module.exports = {
     generarVenta,
     feedbackUrl,
     obtenerFeedbackCompra,
-    enviarCorreoCompraCliente
+    enviarCorreoCompraCliente,
+    registrarCompraAdmin
 }

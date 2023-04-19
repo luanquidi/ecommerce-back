@@ -32,10 +32,12 @@ const listarConfig = async (req, res) => {
 
             // Se valida existencia del usuario.
             const configEncontrada = await config.find();
-            const listadoConfiges = await config.findById({ _id: configEncontrada[0]._id });
+            // console.log(configEncontrada)
+            // let id = configEncontrada[0]._id
+            // const listadoConfiges = await config.findById({ _id: id });
 
             res.status(200).send({
-                datos: listadoConfiges,
+                datos: configEncontrada,
                 resultadoExitoso: true,
                 mensaje: 'Operación existosa!'
             });

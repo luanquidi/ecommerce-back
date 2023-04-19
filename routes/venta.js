@@ -9,6 +9,7 @@ const api = express.Router();
 const auth = require('../middlewares/authenticate');
 
 api.post('/registrarCompra', auth.auth, ventaController.registrarCompra);
+api.post('/registrarCompraAdmin', auth.auth, ventaController.registrarCompraAdmin);
 api.post('/registrarCompraMercadoPago', auth.auth, ventaController.generarVenta);
 api.get('/feedback', ventaController.feedbackUrl);
 api.get('/obtenerFeedbackCompra/:id', auth.auth, ventaController.obtenerFeedbackCompra);

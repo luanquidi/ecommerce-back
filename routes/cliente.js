@@ -24,6 +24,10 @@ api.put('/actualizarClientePerfil/:id', auth.auth, clienteController.actualizarC
 api.get('/obtenerClienteAdmin/:id', auth.auth, clienteController.obtenerClienteAdmin);
 // Ruta para el obtener un cliente.
 api.get('/obtenerCliente/:id', auth.auth, clienteController.obtenerCliente);
+// Ruta para el obtener un cliente.
+api.get('/buscarClientePorIdentificacion/:identificacion', auth.auth, clienteController.buscarClientePorIdentificacion);
+
+
 // Ruta para eliminar un cliente admin.
 api.delete('/eliminarClienteAdmin/:id', auth.auth, clienteController.eliminarClienteAdmin);
 

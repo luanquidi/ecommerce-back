@@ -229,6 +229,41 @@ const obtenerCliente = async (req, res) => {
 
 }
 
+const buscarClientePorIdentificacion = async (req, res) => {
+
+    if (req.user) {
+        // Se obtiene id.
+        const id = req.params.identificacion
+        try {
+            // Se valida existencia del usuario.
+            const clienteEncontrado = await cliente.findOne({ identificacion: id });
+
+            if (clienteEncontrado) {
+                clienteEncontrado.password = '';
+                res.status(200).send({
+                    datos: clienteEncontrado,
+                    resultadoExitoso: true,
+                    mensaje: 'Operación existosa!'
+                });
+            } else {
+                res.status(200).send({
+                    datos: null,
+                    resultadoExitoso: false,
+                    mensaje: 'Operación existosa!'
+                });
+            }
+
+        } catch (error) {
+            res.status(200).send({ datos: null, resultadoExitoso: false, mensaje: 'El cliente no existe.' })
+        }
+
+
+    } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+
+}
+
+
+
 const actualizarClientePerfil = async (req, res) => {
     if (req.user) {
         // Se obtiene id.
@@ -537,5 +572,6 @@ module.exports = {
     obtenerOrdenDetalle,
     emitirReviewProductoCliente,
     obtenerReviewProductoCliente,
-    obtenerReviewPorCliente
+    obtenerReviewPorCliente,
+    buscarClientePorIdentificacion
 }
