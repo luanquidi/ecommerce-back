@@ -7,7 +7,7 @@ require('dotenv').config({
 const express = require('express');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
-const mercadopago = require("mercadopago");
+const mercadopago = require("mercadopago"); 
 mercadopago.configure({
     access_token: process.env.ACCESS_TOKEN || 'TEST-5254381570087218-032715-288872b3526381c24dca88a3eba275fd-181545197',
 });
