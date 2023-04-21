@@ -354,7 +354,7 @@ const enviarCorreoCompraCliente = async (req, res) => {
         var mailOptions = {
             from: 'lquinones965@gmail.com',
             to: ventaDetalle.cliente.email,
-            subject: 'Gracias por tu compra, Mi Tienda',
+            subject: 'Gracias por tu compra, Be You',
             html: htmlToSend
         };
         // res.status(200).send({ data: true });
@@ -414,7 +414,7 @@ const enviarCorreoCompra = async (idVenta) => {
         var mailOptions = {
             from: 'lquinones965@gmail.com',
             to: ventaDetalle.cliente.email,
-            subject: 'Gracias por tu compra, Mi Tienda',
+            subject: 'Gracias por tu compra, Be You',
             html: htmlToSend
         };
         // res.status(200).send({ data: true });
