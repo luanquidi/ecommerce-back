@@ -13,8 +13,9 @@ const path = multyParty({
 })
 
 // PRODUCTOS
-api.post('/registroProducto', [auth.auth,path], productoController.registroProducto);
+api.post('/registroProducto', [auth.auth, path], productoController.registroProducto);
 api.get('/listarProductos/:filtro?', auth.auth, productoController.listarProductosFiltro);
+api.get('/listarProductosAdmin/:tipo?/:filtro?', auth.auth, productoController.listarProductosFiltroAdmin);
 api.put('/actualizarProducto/:id', [auth.auth, path], productoController.actualizarProducto);
 api.delete('/eliminarProducto/:id', auth.auth, productoController.eliminarProducto);
 api.get('/obtenerPortada/:img', productoController.obtenerPortada);

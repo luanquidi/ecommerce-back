@@ -92,6 +92,52 @@ const listarProductosFiltro = async (req, res) => {
 
 }
 
+const listarProductosFiltroAdmin = async (req, res) => {
+
+    if (req.user) {
+        if (req.user.rol === 'Administrador') {
+            // Se declaran variables
+            const tipo = req.params['tipo'];
+            const filtro = req.params['filtro'];
+            let listadoProductos = [];
+
+
+            if (tipo === null || tipo === 'null') {
+                // Se valida existencia del usuario.
+                listadoProductos = await producto.find();
+
+                res.status(200).send({
+                    datos: listadoProductos,
+                    resultadoExitoso: true,
+                    mensaje: 'Operación existosa!'
+                });
+            } else {
+                if (tipo === 'titulo') {
+                    listadoProductos = await producto.find({ titulo: new RegExp(filtro, 'i') });
+
+                    res.status(200).send({
+                        datos: listadoProductos,
+                        resultadoExitoso: true,
+                        mensaje: 'Operación existosa!'
+                    });
+
+                } else if (tipo === 'referencia') {
+                    listadoProductos = await producto.find({ referencia: new RegExp(filtro, 'i') });
+
+                    res.status(200).send({
+                        datos: listadoProductos,
+                        resultadoExitoso: true,
+                        mensaje: 'Operación existosa!'
+                    });
+                }
+            }
+        } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+    } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+
+}
+
+
+
 // Método para obtener la portada
 const obtenerPortada = async (req, res) => {
 
@@ -525,5 +571,6 @@ module.exports = {
     listarProductosRecomendados,
     listarProductosNuevos,
     listarProductosMasVendidos,
-    obtenerReviewsPublicoProducto
+    obtenerReviewsPublicoProducto,
+    listarProductosFiltroAdmin
 }
