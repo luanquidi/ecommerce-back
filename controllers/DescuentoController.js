@@ -4,6 +4,7 @@
 const descuento = require("../models/descuento");
 const fs = require('fs');
 const path = require('path');
+const { CONSTANTS } = require("../config/constants");
 
 const registrarDescuento = async (req, res) => {
     if (req.user) {
@@ -12,7 +13,7 @@ const registrarDescuento = async (req, res) => {
             const data = req.body;
             const files = req.files;
             let imgPath = files.banner.path;
-            let splitPatch = process.env.PATH_IMAGES || '\\';
+            let splitPatch = CONSTANTS.path;
             const nombreImg = imgPath.split(splitPatch)[2];
 
             data.banner = nombreImg;
@@ -102,7 +103,7 @@ const actualizarDescuento = async (req, res) => {
             if (req.files) {
                 const files = req.files;
                 let imgPath = files.banner.path;
-                let splitPatch = process.env.PATH_IMAGES || '\\';
+                let splitPatch = CONSTANTS.path;
                 const nombreImg = imgPath.split(splitPatch)[2];
 
 

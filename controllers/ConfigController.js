@@ -4,6 +4,7 @@
 const config = require("../models/config");
 const fs = require('fs');
 const path = require('path');
+const { CONSTANTS } = require("../config/constants");
 
 const registrarConfig = async (req, res) => {
 
@@ -75,7 +76,7 @@ const actualizarConfig = async (req, res) => {
             if (req.files) {
                 const files = req.files;
                 let imgPath = files.logo.path;
-                let splitPatch = process.env.PATH_IMAGES || '\\';
+                let splitPatch = CONSTANTS.path;
                 const nombreImg = imgPath.split(splitPatch)[2];
 
 

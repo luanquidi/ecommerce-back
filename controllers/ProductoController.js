@@ -2,12 +2,14 @@
 
 // Se declaran variables de controlador.
 const producto = require("../models/producto");
+const proveedorModel = require("../models/proveedor");
 const review = require("../models/review");
 const inventario = require("../models/inventario");
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../helpers/jwt');
 const fs = require('fs');
 const path = require('path');
+const { CONSTANTS } = require("../config/constants");
 
 
 
@@ -22,7 +24,7 @@ const registroProducto = async (req, res) => {
             const data = req.body;
             const files = req.files;
             let imgPath = files.portada.path;
-            let splitPatch = process.env.PATH_IMAGES || '\\';
+            let splitPatch = CONSTANTS.path;
             const nombreImg = imgPath.split(splitPatch)[2];
 
             data.portada = nombreImg;
@@ -36,6 +38,13 @@ const registroProducto = async (req, res) => {
                 cantidad: data.stock,
                 proveedor: 'Primer registro',
                 producto: reg._id
+            });
+
+            let productosPorProveedor = await producto.find({ proveedor: data.proveedor }).sort({ createdAt: -1 });
+            let proveedorEntrante = await proveedorModel.findById({ _id: data.proveedor });
+
+            await producto.findOneAndUpdate({ _id: reg._id }, {
+                referencia: `${proveedorEntrante.referencia}-${productosPorProveedor.length}`
             });
 
             res.status(200).send({
@@ -95,7 +104,7 @@ const obtenerPortada = async (req, res) => {
             let pathImg = `./uploads/default.jpg`
             res.status(200).sendFile(path.resolve(pathImg));
         }
-    }); 
+    });
 }
 
 // Método para obtener un producto.
@@ -129,7 +138,7 @@ const actualizarProducto = async (req, res) => {
             if (req.files) {
                 const files = req.files;
                 let imgPath = files.portada.path;
-                let splitPatch = process.env.PATH_IMAGES || '\\';
+                let splitPatch = CONSTANTS.path;
                 const nombreImg = imgPath.split(splitPatch)[2];
 
                 const reg = await producto.findByIdAndUpdate({ _id: id }, {
@@ -334,7 +343,7 @@ const agregarImagenGaleria = async (req, res) => {
 
             const files = req.files;
             let imgPath = files.imagen.path;
-            let splitPatch = process.env.PATH_IMAGES || '\\';
+            let splitPatch = CONSTANTS.path;
             const nombreImg = imgPath.split(splitPatch)[2];
 
 

@@ -15,6 +15,7 @@ const VentaSchema = Schema({
     cupon: { type: String, required: false },
     estado: { type: String, required: true },
     direccion: { type: Schema.ObjectId, ref: 'direccion', required: false },
+    caja: { type: Schema.ObjectId, ref: 'caja', required: false },
     idOrdenMercadoPago: { type: String, required: false },
     nota: { type: String, required: false },
     createdAt: { type: Date, required: true, default: Date.now },

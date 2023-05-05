@@ -8,8 +8,10 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const mercadopago = require("mercadopago"); 
+const { CONSTANTS } = require('./config/constants');
+
 mercadopago.configure({
-    access_token: process.env.ACCESS_TOKEN || 'TEST-5254381570087218-032715-288872b3526381c24dca88a3eba275fd-181545197',
+    access_token:  CONSTANTS.mercadoPago
 });
 // Se establece puerto del servidor.
 const port = process.env.PORT || 4201;
@@ -29,6 +31,8 @@ const ventaRoutes = require('./routes/venta');
 const detalleVentaRoutes = require('./routes/detalleVenta');
 const descuentoRoutes = require('./routes/descuento');
 const contactoRoutes = require('./routes/contacto');
+const cajaRoutes = require('./routes/caja');
+const proveedorRoutes = require('./routes/proveedor');
 
 
 
@@ -94,6 +98,9 @@ app.use('/api', ventaRoutes);
 app.use('/api', detalleVentaRoutes);
 app.use('/api', descuentoRoutes);
 app.use('/api', contactoRoutes);
+app.use('/api', cajaRoutes);
+app.use('/api', proveedorRoutes);
+
 
 
 

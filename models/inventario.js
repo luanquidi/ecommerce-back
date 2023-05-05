@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 
 // Creación del modelo en base de datos para los inventarios.
 const InventarioSchema = Schema({
-    producto: { type: Schema.ObjectId, ref: 'producto' , required: true },
+    producto: { type: Schema.ObjectId, ref: 'producto', required: true },
     admin: { type: Schema.ObjectId, ref: 'admin', required: true },
     cantidad: { type: Number, required: true },
     proveedor: { type: String, required: true },
