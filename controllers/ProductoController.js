@@ -67,7 +67,7 @@ const listarProductosFiltro = async (req, res) => {
             const filtro = req.params['filtro'];
             if (filtro == null || filtro == 'null') {
                 // Se valida existencia del usuario.
-                const listadoProductos = await producto.find();
+                const listadoProductos = await producto.find().populate('proveedor');
 
                 res.status(200).send({
                     datos: listadoProductos,
@@ -76,7 +76,7 @@ const listarProductosFiltro = async (req, res) => {
                 });
             } else {
                 // Se valida existencia del usuario.
-                const listadoProductos = await producto.find({ titulo: new RegExp(filtro, 'i') });
+                const listadoProductos = await producto.find({ titulo: new RegExp(filtro, 'i') }).populate('proveedor');
 
                 res.status(200).send({
                     datos: listadoProductos,
@@ -104,7 +104,7 @@ const listarProductosFiltroAdmin = async (req, res) => {
 
             if (tipo === null || tipo === 'null') {
                 // Se valida existencia del usuario.
-                listadoProductos = await producto.find();
+                listadoProductos = await producto.find().populate('proveedor');
 
                 res.status(200).send({
                     datos: listadoProductos,
@@ -113,7 +113,7 @@ const listarProductosFiltroAdmin = async (req, res) => {
                 });
             } else {
                 if (tipo === 'titulo') {
-                    listadoProductos = await producto.find({ titulo: new RegExp(filtro, 'i') });
+                    listadoProductos = await producto.find({ titulo: new RegExp(filtro, 'i') }).populate('proveedor');
 
                     res.status(200).send({
                         datos: listadoProductos,
@@ -122,7 +122,7 @@ const listarProductosFiltroAdmin = async (req, res) => {
                     });
 
                 } else if (tipo === 'referencia') {
-                    listadoProductos = await producto.find({ referencia: new RegExp(filtro, 'i') });
+                    listadoProductos = await producto.find({ referencia: new RegExp(filtro, 'i') }).populate('proveedor');
 
                     res.status(200).send({
                         datos: listadoProductos,
