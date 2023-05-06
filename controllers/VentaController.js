@@ -340,8 +340,8 @@ const enviarCorreoCompraCliente = async (req, res) => {
         service: 'gmail',
         host: 'smtp.gmail.com',
         auth: {
-            user: 'lquinones965@gmail.com',
-            pass: 'jhjogpmintlfreie'
+            user: 'maquillajebeyou05@gmail.com',
+            pass: 'awrwnopcdeckisid'
         }
     }));
 
@@ -353,7 +353,7 @@ const enviarCorreoCompraCliente = async (req, res) => {
         var htmlToSend = template({ op: true });
 
         var mailOptions = {
-            from: 'lquinones965@gmail.com',
+            from: 'maquillajebeyou05@gmail.com',
             to: ventaDetalle.cliente.email,
             subject: 'Gracias por tu compra, Be You',
             html: htmlToSend
@@ -400,8 +400,8 @@ const enviarCorreoCompra = async (idVenta) => {
         service: 'gmail',
         host: 'smtp.gmail.com',
         auth: {
-            user: 'lquinones965@gmail.com',
-            pass: 'jhjogpmintlfreie'
+            user: 'maquillajebeyou05@gmail.com',
+            pass: 'awrwnopcdeckisid'
         }
     }));
 
@@ -413,7 +413,7 @@ const enviarCorreoCompra = async (idVenta) => {
         var htmlToSend = template({ op: true });
 
         var mailOptions = {
-            from: 'lquinones965@gmail.com',
+            from: 'maquillajebeyou05@gmail.com',
             to: ventaDetalle.cliente.email,
             subject: 'Gracias por tu compra, Be You',
             html: htmlToSend
