@@ -85,7 +85,7 @@ const obtenerVentasAdmin = async (req, res) => {
                 let ttDesde = Date.parse(new Date(`${desde}T00:00:00`)) / 1000;
                 let ttHasta = Date.parse(new Date(`${hasta}T23:59:59`)) / 1000;
 
-                let temVentas = await venta.find().populate('cliente').populate('direccion');
+                let temVentas = await venta.find().populate('cliente').populate('direccion').sort({ createdAt: -1 });
 
                 for (const item of temVentas) {
                     let formatFecha = Date.parse(new Date(item.createdAt)) / 1000;
@@ -99,7 +99,7 @@ const obtenerVentasAdmin = async (req, res) => {
                 });
 
             } else {
-                ventas = await venta.find().populate('cliente').populate('direccion');
+                ventas = await venta.find().populate('cliente').populate('direccion').sort({ createdAt: -1 });;
 
                 res.status(200).send({
                     datos: ventas,
@@ -156,7 +156,7 @@ const kpiGananciasMensuales = async (req, res) => {
                         gananciaMes += ventaItem.subtotal;
                         numeroVentasMesActual++;
                     }
-                    
+
                     if (currentMes - 1 == mes) numeroVentasMesAnterior++;
 
                     if (mes == 1) enero += ventaItem.subtotal;

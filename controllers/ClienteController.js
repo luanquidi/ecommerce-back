@@ -29,7 +29,7 @@ const registroCliente = async (req, res) => {
                     data.password = hash;
                     const reg = await cliente.create(data);
                     res.status(200).send({
-                        datos: true,
+                        datos: reg,
                         resultadoExitoso: true,
                         mensaje: 'Operación existosa!'
                     });
@@ -133,7 +133,7 @@ const registroClienteAdmin = async (req, res) => {
                         data.password = hash;
                         const reg = await cliente.create(data);
                         res.status(200).send({
-                            datos: true,
+                            datos: reg,
                             resultadoExitoso: true,
                             mensaje: 'Operación existosa!'
                         });
