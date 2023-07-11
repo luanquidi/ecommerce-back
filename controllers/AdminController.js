@@ -3,6 +3,7 @@
 // Se declaran variables de controlador.
 const admin = require("../models/admin");
 const venta = require("../models/venta");
+const caja = require("../models/caja");
 const dVenta = require("../models/detalleVenta");
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../helpers/jwt');
@@ -242,15 +243,43 @@ const cambiarEstadoVenta = async (req, res) => {
 
             await venta.findOneAndUpdate({ _id: idVenta }, {
                 pendiente: false
-            })
-
-
-
-            res.status(200).send({
-                datos: true,
-                resultadoExitoso: true,
-                mensaje: 'Operación existosa!'
             });
+
+            let ventaActualizada =  await venta.findById({ _id: idVenta });
+
+            const cajaEncontrada = await caja.findOne({ activa: true });
+
+
+
+            if(cajaEncontrada) {
+                let items = [];
+                cajaEncontrada.ventas.map((ventaItem)=> {
+                    if(ventaItem._id == ventaActualizada._id) {
+                        ventaItem.pendiente = false;
+                    }
+                    items.push(ventaItem)
+                })
+
+                await caja.findOneAndUpdate({ _id: cajaEncontrada._id }, {
+                    ventas: items
+                });
+
+                res.status(200).send({
+                    datos: true,
+                    resultadoExitoso: true,
+                    mensaje: 'Operación existosa!'
+                });
+            }else {
+
+                res.status(200).send({
+                    datos: true,
+                    resultadoExitoso: true,
+                    mensaje: 'Operación existosa!'
+                });
+            }
+
+
+
 
 
 
