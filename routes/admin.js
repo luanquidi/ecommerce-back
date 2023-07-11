@@ -15,6 +15,8 @@ api.post('/loginAdmin', adminController.loginAdmin);
 
 // ======================= VENTAS =============================
 api.get('/obtenerVentasAdmin/:desde?/:hasta?', auth.auth, adminController.obtenerVentasAdmin)
+api.get('/obtenerVentasPendientesAdmin/:nombreCliente?', auth.auth, adminController.obtenerVentasPendientesAdmin)
+api.get('/cambiarEstadoVenta/:id', auth.auth, adminController.cambiarEstadoVenta)
 
 // ======================= KPI =============================
 api.get('/kpiGananciasMensuales', auth.auth, adminController.kpiGananciasMensuales)

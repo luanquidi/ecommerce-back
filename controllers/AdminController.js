@@ -85,7 +85,7 @@ const obtenerVentasAdmin = async (req, res) => {
                 let ttDesde = Date.parse(new Date(`${desde}T00:00:00`)) / 1000;
                 let ttHasta = Date.parse(new Date(`${hasta}T23:59:59`)) / 1000;
 
-                let temVentas = await venta.find().populate('cliente').populate('direccion').sort({ createdAt: -1 });
+                let temVentas = await venta.find({ pendiente: { $ne: true } }).populate('cliente').populate('direccion').sort({ createdAt: -1 });
 
                 for (const item of temVentas) {
                     let formatFecha = Date.parse(new Date(item.createdAt)) / 1000;
@@ -99,7 +99,44 @@ const obtenerVentasAdmin = async (req, res) => {
                 });
 
             } else {
-                ventas = await venta.find().populate('cliente').populate('direccion').sort({ createdAt: -1 });;
+                ventas = await venta.find({ pendiente: { $ne: true } }).populate('cliente').populate('direccion').sort({ createdAt: -1 });;
+
+                res.status(200).send({
+                    datos: ventas,
+                    resultadoExitoso: true,
+                    mensaje: 'Operación existosa!'
+                });
+            }
+
+
+        } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+    } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+
+}
+
+// =========================================================================== VENTAS ==================================================================
+const obtenerVentasPendientesAdmin = async (req, res) => {
+
+    if (req.user) {
+        if (req.user.rol === 'Administrador') {
+
+            let nombreCliente = req.params.nombreCliente;
+
+            if (nombreCliente != 'null') {
+                let temVentas = await venta.find({ pendiente: true }).populate('cliente').populate('direccion').sort({ createdAt: -1 });
+                let ventas = [];
+                nombreCliente = nombreCliente.toLowerCase();
+                for (const ventaItem of temVentas) {
+                    if (ventaItem.cliente.apellidos.toLowerCase().includes(nombreCliente) || ventaItem.cliente.nombres.toLowerCase().includes(nombreCliente)) ventas.push(ventaItem)
+                }
+                res.status(200).send({
+                    datos: ventas,
+                    resultadoExitoso: true,
+                    mensaje: 'Operación existosa!'
+                });
+
+            } else {
+                let ventas = await venta.find({ pendiente: true }).populate('cliente').populate('direccion').sort({ createdAt: -1 });;
 
                 res.status(200).send({
                     datos: ventas,
@@ -137,9 +174,18 @@ const kpiGananciasMensuales = async (req, res) => {
             let gananciaMes = 0;
             let numeroVentasMesActual = 0;
             let numeroVentasMesAnterior = 0;
+            let totalPendiente = 0;
+            let numeroVentasPendientes = 0;
 
 
-            const registroVentas = await venta.find();
+            const registroVentas = await venta.find({ pendiente: { $ne: true } });
+            const pendientesVentas = await venta.find({ pendiente: true });
+            numeroVentasPendientes = pendientesVentas.length;
+
+            for (const pendienteItem of pendientesVentas) {
+                totalPendiente += pendienteItem.subtotal;
+            }
+
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
             const currentMes = currentDate.getMonth() + 1;
@@ -173,10 +219,9 @@ const kpiGananciasMensuales = async (req, res) => {
                     if (mes == 12) diciembre += ventaItem.subtotal;
                 }
             }
-
             res.status(200).send({
                 datos: {
-                    enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre, gananciaTotal, gananciaMes, numeroVentasMesActual, numeroVentasMesAnterior
+                    enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre, gananciaTotal, gananciaMes, numeroVentasMesActual, numeroVentasMesAnterior, numeroVentasPendientes, totalPendiente
                 },
                 resultadoExitoso: true,
                 mensaje: 'Operación existosa!'
@@ -189,10 +234,37 @@ const kpiGananciasMensuales = async (req, res) => {
 }
 
 
+const cambiarEstadoVenta = async (req, res) => {
+
+    if (req.user) {
+        if (req.user.rol === 'Administrador') {
+            const idVenta = req.params.id;
+
+            await venta.findOneAndUpdate({ _id: idVenta }, {
+                pendiente: false
+            })
+
+
+
+            res.status(200).send({
+                datos: true,
+                resultadoExitoso: true,
+                mensaje: 'Operación existosa!'
+            });
+
+
+
+        } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+    } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+}
+
+
 // Se exportan todas las funcionalidades.
 module.exports = {
     registroAdmin,
     loginAdmin,
     obtenerVentasAdmin,
-    kpiGananciasMensuales
+    kpiGananciasMensuales,
+    obtenerVentasPendientesAdmin,
+    cambiarEstadoVenta
 }
