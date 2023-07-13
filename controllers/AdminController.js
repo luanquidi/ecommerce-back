@@ -115,6 +115,52 @@ const obtenerVentasAdmin = async (req, res) => {
 
 }
 
+const obtenerCierres = async (req, res) => {
+
+    if (req.user) {
+        if (req.user.rol === 'Administrador') {
+            let cierres = [];
+            const fecha = req.params.fecha;
+
+            if (fecha != 'null') {
+                let fFecha = Date.parse(new Date(`${fecha}T00:00:00`)) / 1000;
+
+                let temCajas = await caja.find({
+                    activa: { $ne: true }
+                }).sort({ createdAt: -1 });
+
+
+                for (const item of temCajas) {
+                    let fechaFormateada = item.createdAt.toISOString().split('T')[0];
+                    if (fechaFormateada == fecha) cierres.push(item);
+                }
+
+
+                res.status(200).send({
+                    datos: cierres,
+                    resultadoExitoso: true,
+                    mensaje: 'Operación existosa!'
+                });
+
+            } else {
+                let temCajas = await caja.find({ activa: { $ne: true } }).sort({ createdAt: -1 });
+
+                res.status(200).send({
+                    datos: temCajas,
+                    resultadoExitoso: true,
+                    mensaje: 'Operación existosa!'
+                });
+            }
+
+
+        } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+    } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+
+}
+
+
+
+
 // =========================================================================== VENTAS ==================================================================
 const obtenerVentasPendientesAdmin = async (req, res) => {
 
@@ -177,9 +223,12 @@ const kpiGananciasMensuales = async (req, res) => {
             let numeroVentasMesAnterior = 0;
             let totalPendiente = 0;
             let numeroVentasPendientes = 0;
+            let salidasTotales = 0;
+            let salidasMes = 0;
 
 
             const registroVentas = await venta.find({ pendiente: { $ne: true } });
+            const cajasEncontradas = await caja.find();
             const pendientesVentas = await venta.find({ pendiente: true });
             numeroVentasPendientes = pendientesVentas.length;
 
@@ -190,6 +239,26 @@ const kpiGananciasMensuales = async (req, res) => {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
             const currentMes = currentDate.getMonth() + 1;
+
+            for (const cajaItem of cajasEncontradas) {
+                let createdAtDateCaja = new Date(cajaItem.createdAt);
+                const mesCaja = createdAtDateCaja.getMonth() + 1;
+
+                if (currentYear == createdAtDateCaja.getFullYear()) {
+                    if (currentMes == mesCaja) {
+                        cajaItem.salidas.map((item) => {
+                            salidasMes += item.valor;
+                        })
+                    }
+                }
+
+                cajaItem.salidas.map((item) => {
+                    salidasTotales += item.valor
+
+                })
+            }
+
+
 
             for (const ventaItem of registroVentas) {
                 let createdAtDate = new Date(ventaItem.createdAt);
@@ -222,7 +291,7 @@ const kpiGananciasMensuales = async (req, res) => {
             }
             res.status(200).send({
                 datos: {
-                    enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre, gananciaTotal, gananciaMes, numeroVentasMesActual, numeroVentasMesAnterior, numeroVentasPendientes, totalPendiente
+                    enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre, gananciaTotal, gananciaMes, numeroVentasMesActual, numeroVentasMesAnterior, numeroVentasPendientes, totalPendiente, salidasTotales, salidasMes
                 },
                 resultadoExitoso: true,
                 mensaje: 'Operación existosa!'
@@ -245,16 +314,16 @@ const cambiarEstadoVenta = async (req, res) => {
                 pendiente: false
             });
 
-            let ventaActualizada =  await venta.findById({ _id: idVenta });
+            let ventaActualizada = await venta.findById({ _id: idVenta });
 
             const cajaEncontrada = await caja.findOne({ activa: true });
 
 
 
-            if(cajaEncontrada) {
+            if (cajaEncontrada) {
                 let items = [];
-                cajaEncontrada.ventas.map((ventaItem)=> {
-                    if(ventaItem._id == ventaActualizada._id) {
+                cajaEncontrada.ventas.map((ventaItem) => {
+                    if (ventaItem._id == ventaActualizada._id) {
                         ventaItem.pendiente = false;
                     }
                     items.push(ventaItem)
@@ -269,7 +338,7 @@ const cambiarEstadoVenta = async (req, res) => {
                     resultadoExitoso: true,
                     mensaje: 'Operación existosa!'
                 });
-            }else {
+            } else {
 
                 res.status(200).send({
                     datos: true,
@@ -295,5 +364,6 @@ module.exports = {
     obtenerVentasAdmin,
     kpiGananciasMensuales,
     obtenerVentasPendientesAdmin,
-    cambiarEstadoVenta
+    cambiarEstadoVenta,
+    obtenerCierres
 }
