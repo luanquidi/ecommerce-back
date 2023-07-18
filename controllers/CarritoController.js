@@ -2,6 +2,7 @@
 
 // Se declaran variables de controlador.
 const carrito = require("../models/carrito");
+const producto = require("../models/producto");
 
 const agregarCarrito = async (req, res) => {
 
@@ -31,19 +32,26 @@ const agregarCarrito = async (req, res) => {
 
 const obtenerCarrito = async (req, res) => {
 
-    if (req.user) {
+    // if (req.user) {
         // Se procesa la data.
-        const id = req.params['id'];
+        const carritoItems = req.body;
+        let carritoItemsProducto = [];
 
-        const carritoCliente = await carrito.find({ cliente: id }).populate('producto');
+        for (const productoItem of carritoItems) {
+            const carritoCliente = await producto.findById({ _id: productoItem.producto });
+            carritoItemsProducto.push({
+                productoCarrito:productoItem,
+                productoDetalle: carritoCliente
+            })
+        }
 
         res.status(200).send({
-            datos: carritoCliente,
+            datos: carritoItemsProducto,
             resultadoExitoso: true,
             mensaje: 'Operación existosa!'
         });
 
-    } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
+    // } else res.status(500).send({ datos: null, resultadoExitoso: false, mensaje: 'No access.' });
 }
 
 const eliminarCarrito = async (req, res) => {
