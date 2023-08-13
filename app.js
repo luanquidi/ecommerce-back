@@ -62,7 +62,7 @@ io.on('connection', function (socket) {
 
 
 // Se establece conexión a base de datos mongo.
-mongoose.connect(url_bd, { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
+mongoose.connect(CONSTANTS.bd, { useUnifiedTopology: true, useNewUrlParser: true }, (err, res) => {
     if (err) console.log(err);
     else {
         server.listen(port, () => {
