@@ -14,6 +14,7 @@ const CONSTANTS = {
     urltienda: 'https://beyoulovers.com',
     urlFeedBack: 'https://api.beyoulovers.com/api/feedback',
     // bd: 'mongodb://mongo:OmtvLMC8KCF1vhPvaiar@containers-us-west-90.railway.app:6344/tienda?authSource=admin'
+    // bd: 'mongodb://mongo:OmtvLMC8KCF1vhPvaiar@containers-us-west-90.railway.app:6344/tienda?authSource=admin'
     bd: 'mongodb://mongo:G1BhacHGFB5G2h2f6DD4fBh2A-BgHeAf@roundhouse.proxy.rlwy.net:30600/tienda?authSource=admin'
 }
 
